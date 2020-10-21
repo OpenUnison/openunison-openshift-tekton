@@ -416,7 +416,7 @@ spec: {}
                       "eventlistener": "gitlab-listener"
                   },
                   "name": "gitlab-webhook",
-                  "namespace": "$nameSpace$-build",
+                  "namespace": "$nameSpace$-build"
               },
               "spec": {
                   "host": "$nameSpace$-application.#[GITLAB_WEBHOOK_SUFFIX]",
