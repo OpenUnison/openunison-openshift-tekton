@@ -400,48 +400,40 @@ spec: {}
         </customTask>
 
 
-        <!-- create webhook ingress -->
+        <!-- create webhook route -->
         <customTask className="com.tremolosecurity.provisioning.tasks.CreateK8sObject">
           <param name="targetName" value="k8s" />
           <param name="template">
             <![CDATA[ 
             {
-              "apiVersion": "extensions/v1beta1",
-              "kind": "Ingress",
+              "apiVersion": "route.openshift.io/v1",
+              "kind": "Route",
               "metadata": {
-                "name": "gitlab-webhook",
-                "namespace": "$nameSpace$-build",
-                "annotations": {
-                  "cert-manager.io/cluster-issuer": "ca-issuer"
-                }
+                  "creationTimestamp": "2020-10-21T02:48:31Z",
+                  "labels": {
+                      "app.kubernetes.io/managed-by": "EventListener",
+                      "app.kubernetes.io/part-of": "Triggers",
+                      "eventlistener": "gitlab-listener"
+                  },
+                  "name": "gitlab-webhook",
+                  "namespace": "$nameSpace$-build",
               },
               "spec": {
-                "rules": [
-                  {
-                    "host": "$nameSpace$-application.#[GITLAB_WEBHOOK_SUFFIX]",
-                    "http": {
-                      "paths": [
-                        {
-                          "backend": {
-                            "serviceName": "el-gitlab-listener",
-                            "servicePort": 8080
-                          },
-                          "pathType": "ImplementationSpecific"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "tls": [
-                  {
-                    "hosts": [
-                      "$nameSpace$-application.#[GITLAB_WEBHOOK_SUFFIX]"
-                    ],
-                    "secretName": "ingresssecret"
-                  }
-                ]
+                  "host": "$nameSpace$-application.#[GITLAB_WEBHOOK_SUFFIX]",
+                  "port": {
+                      "targetPort": "http-listener"
+                  },
+                  "tls": {
+                      "termination": "edge"
+                  },
+                  "to": {
+                      "kind": "Service",
+                      "name": "el-gitlab-listener",
+                      "weight": 100
+                  },
+                  "wildcardPolicy": "None"
               }
-            }
+          }
 ]]>
           </param>
           <param name="kind" value="Ingress" />
