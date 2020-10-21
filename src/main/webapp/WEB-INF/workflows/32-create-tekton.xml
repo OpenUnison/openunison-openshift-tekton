@@ -436,8 +436,8 @@ spec: {}
           }
 ]]>
           </param>
-          <param name="kind" value="Ingress" />
-          <param name="url" value="/apis/extensions/v1beta1/namespaces/$nameSpace$-build/ingresses" />
+          <param name="kind" value="Route" />
+          <param name="url" value="/apis/route.openshift.io/v1/namespaces/$nameSpace$-build/routes" />
         </customTask>
 
 
