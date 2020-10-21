@@ -26,10 +26,18 @@
           <param name="attributes" value="unison.group.create.param.2=Manage kubernetes namespace $nameSpace$" />
         </customTask>
         <customTask className="com.tremolosecurity.provisioning.customTasks.AddGroupToStore">
+          <param name="target" value="k8s"/>
+          <param name="name" value="k8s-namespace-operations-$nameSpace$"/>
+        </customTask>
+        <customTask className="com.tremolosecurity.provisioning.customTasks.AddGroupToStore">
           <param name="target" value="jitdb" />
           <param name="name" value="k8s-namespace-developer-$nameSpace$" />
           <param name="attributes" value="unison.group.create.sql=INSERT INTO localGroups (name,description) VALUES (?,?)" />
           <param name="attributes" value="unison.group.create.param.2=View kubernetes namespace $nameSpace$" />
+        </customTask>
+        <customTask className="com.tremolosecurity.provisioning.customTasks.AddGroupToStore">
+          <param name="target" value="k8s"/>
+          <param name="name" value="k8s-namespace-developer-$nameSpace$"/>
         </customTask>
 
 
@@ -81,6 +89,21 @@
             <provision sync="false" target="jitdb" setPassword="false" onlyPassedInAttributes="false">
               <attributes>
                 <value>uid</value>
+              </attributes>
+            </provision>
+          </onSuccess>
+          <onFailure />
+          <map>
+            <mapping targetAttributeName="uid" targetAttributeSource="uid" sourceType="user" />
+          </map>
+        </mapping>
+
+        <mapping strict="true">
+          <onSuccess>
+            <addGroup name="k8s-namespace-operations-$nameSpace$" remove="false" />
+            <provision sync="false" target="k8s" setPassword="false" onlyPassedInAttributes="false">
+              <attributes>
+                
               </attributes>
             </provision>
           </onSuccess>
